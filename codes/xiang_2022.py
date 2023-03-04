@@ -57,13 +57,16 @@ inputText3 = str(node_id) + m + str(T.x) + str(T.y) + str(R.x) + str(R.y) + str(
 hash3.update(inputText3.encode())
 h3 = int(hash3.hexdigest(), 16)
 # tow = pow(x, curve.field.p-2, curve.field.p) * (h2 * t + h3 * d)
-tow = (h2 * t + h3 * d)
+tow = (h2 * x + h3 * d)
 end = time.time()
-# print(end-start)
+print(f"Sign time -> {end-start}")
 
 ## Signature (T, tow)
 ## 7. Verify
+start = time.time()
 lhs = tow * curve.g
-rhs = h2 * T + h3 * (R + h1 * Ppub)
+rhs = h2 * X + h3 * (R + h1 * Ppub)
+end = time.time()
+print(f"Verify time -> {end-start}")
 print(lhs.x, lhs.y)
 print(rhs.x, rhs.y)
