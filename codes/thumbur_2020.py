@@ -40,7 +40,11 @@ x = secrets.randbelow(curve.field.n)
 X = x * curve.g
 
 ## 4. Set-Public-Key
-## User sets Public Key -> (R, X)
+inputText2 = str(node_id) + str(X.x) + str(X.y)
+hash2.update(inputText2.encode())
+h2 = int(hash2.hexdigest(), 16)
+Q = R + h2 * X
+## User sets Public Key -> (R, Q)
 
 ## 5. Set-Private-Key
 ## User sets Private Key -> (d, x)
@@ -49,24 +53,21 @@ X = x * curve.g
 start = time.time()
 u = secrets.randbelow(curve.field.n)
 U = u * curve.g
-inputText2 = str(node_id) + str(X.x) + str(X.y) + str(Ppub.x) + str(Ppub.y)
-hash2.update(inputText2.encode())
-h2 = int(hash2.hexdigest(), 16)
 m = 'Hello this is Rhithick'
 inputText3 = str(node_id) + m + str(R.x) + str(R.y) + str(X.x) + str(X.y) + str(U.x) + str(U.y)
 hash3.update(inputText3.encode())
 h3 = int(hash3.hexdigest(), 16)
-v = d + h3 * u + h2 * x
+v = u + h3 * (d + h2 * x)
 end = time.time()
-print(f'Sign time --> {end-start} s')
+print(f'Sign time --> {end-start}')
 # print('{0:.10f}'.format(tow))
 ## Signature (U, v)
 
 ## 7. Verify
 start = time.time()
 lhs = v * curve.g
-rhs = R + h1 * Ppub + h2 * X + h3 * U
+rhs = U + h3 * (Q + h1 * Ppub)
 end = time.time()
-print(f'Verify time --> {end-start} s')
+print(f'Verify time --> {end-start}')
 print(lhs.x, lhs.y)
 print(rhs.x, rhs.y)

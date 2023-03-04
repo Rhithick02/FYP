@@ -32,8 +32,8 @@ d = (r + h1 * s)
 ## Verification equation
 lhs = d * curve.g
 rhs = h1 * Ppub + R
-print(lhs.x, lhs.y)
-print(rhs.x, rhs.y)
+# print(lhs.x, lhs.y)
+# print(rhs.x, rhs.y)
 
 ## 3. Set-Secret-Value
 x = secrets.randbelow(curve.field.n)
@@ -56,11 +56,14 @@ m = 'Hello this is Rhithick'
 inputText3 = str(node_id) + m + str(T.x) + str(T.y) + str(R.x) + str(R.y) + str(X.x) + str(X.y) + str(Ppub.x) + str(Ppub.y)
 hash3.update(inputText3.encode())
 h3 = int(hash3.hexdigest(), 16)
-# tow = (x ** -1) * (h2 * t + h3 * d)
+# tow = pow(x, curve.field.p-2, curve.field.p) * (h2 * t + h3 * d)
+tow = (h2 * t + h3 * d)
 end = time.time()
-print(end-start)
-# print('{0:.10f}'.format(tow))
+# print(end-start)
+
 ## Signature (T, tow)
 ## 7. Verify
-# lhs = tow * X
-# rhs = h2 * T + h3 * (R + h1 * Ppub)
+lhs = tow * curve.g
+rhs = h2 * T + h3 * (R + h1 * Ppub)
+print(lhs.x, lhs.y)
+print(rhs.x, rhs.y)
